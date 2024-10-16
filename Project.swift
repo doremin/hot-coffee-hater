@@ -57,7 +57,6 @@ let project = Project(
       sources: ["StoresFeature/Sources/**"],
       dependencies: [
         .target(name: "StoresFeatureRepository"),
-        .target(name: "StoresFeatureRepositoryImplementation"),
         .target(name: "HotCoffeeHaterCore")
       ]
     ),
@@ -91,7 +90,6 @@ let project = Project(
       sources: ["StoresFeatureUIKit/Sources/**"],
       dependencies: [
         .target(name: "StoresFeatureRepository"),
-        .target(name: "StoresFeatureRepositoryImplementation"),
         .target(name: "HotCoffeeHaterCore")
       ]
     ),
