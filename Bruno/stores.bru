@@ -1,0 +1,22 @@
+meta {
+  name: stores
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://uljukah.kro.kr/stores?latitude=37.51458&longitude=127.11489
+  body: json
+  auth: none
+}
+
+params:query {
+  latitude: 37.51458
+  longitude: 127.11489
+}
+
+body:json {
+  {
+    "title": "test 1"
+  }
+}

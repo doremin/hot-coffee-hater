@@ -14,7 +14,23 @@ let project = Project(
       product: .framework,
       bundleId: bundleId("HotCoffeeHaterCore"),
       sources: ["HotCoffeeHaterCore/Sources/**"],
-      resources: ["HotCoffeeHaterCore/Resources/**"]
+      resources: ["HotCoffeeHaterCore/Resources/**"],
+      dependencies: [
+        .external(name: "RxSwift"),
+        .external(name: "RxCocoa"),
+        .external(name: "RxRelay"),
+        .external(name: "SnapKit")
+      ]
+    ),
+    .target(
+      name: "HotCoffeeHaterTestCore",
+      destinations: .iOS,
+      product: .framework,
+      bundleId: bundleId("HotCoffeeHaterTestCore"),
+      dependencies: [
+        .external(name: "RxTest"),
+        .external(name: "RxBlocking")
+      ]
     ),
     
     // Data Layer
@@ -25,7 +41,7 @@ let project = Project(
       bundleId: bundleId("StoresFeatureEntity"),
       sources: ["StoresFeatureEntity/Sources/**"]
     ),
-
+    
     .target(
       name: "StoresFeatureRepositoryImplementation",
       destinations: .iOS,
@@ -34,7 +50,6 @@ let project = Project(
       sources: ["StoresFeatureRepositoryImplementation/Sources/**"],
       dependencies: [
         .target(name: "StoresFeatureRepository"),
-        .target(name: "StoresFeatureEntity")
       ]
     ),
     
@@ -44,22 +59,26 @@ let project = Project(
       destinations: .iOS,
       product: .framework,
       bundleId: bundleId("StoresFeatureRepository"),
-      sources: ["StoresFeatureRepository/Sources/**"]
+      sources: ["StoresFeatureRepository/Sources/**"],
+      dependencies: [
+        .target(name: "StoresFeatureEntity")
+      ]
     ),
     
     // Features
     // --Stores Feature (SwiftUI)
-    .target(
-      name: "StoresFeature",
-      destinations: .iOS,
-      product: .framework,
-      bundleId: bundleId("StoresFeature"),
-      sources: ["StoresFeature/Sources/**"],
-      dependencies: [
-        .target(name: "StoresFeatureRepository"),
-        .target(name: "HotCoffeeHaterCore")
-      ]
-    ),
+      .target(
+        name: "StoresFeature",
+        destinations: .iOS,
+        product: .framework,
+        bundleId: bundleId("StoresFeature"),
+        sources: ["StoresFeature/Sources/**"],
+        dependencies: [
+          .target(name: "StoresFeatureRepository"),
+          .target(name: "StoresFeatureRepositoryImplementation"),
+          .target(name: "HotCoffeeHaterCore")
+        ]
+      ),
     .target(
       name: "StoresFeatureTests",
       destinations: .iOS,
@@ -75,6 +94,11 @@ let project = Project(
       destinations: .iOS,
       product: .app,
       bundleId: bundleId("StoresFeatureExample"),
+      infoPlist: .extendingDefault(
+        with: [
+          "UILaunchScreen": .dictionary([:])
+        ]
+      ),
       sources: ["StoresFeature/Example/**"],
       dependencies: [
         .target(name: "StoresFeature")
@@ -90,6 +114,7 @@ let project = Project(
       sources: ["StoresFeatureUIKit/Sources/**"],
       dependencies: [
         .target(name: "StoresFeatureRepository"),
+        .target(name: "StoresFeatureRepositoryImplementation"),
         .target(name: "HotCoffeeHaterCore")
       ]
     ),
@@ -100,28 +125,29 @@ let project = Project(
       bundleId: bundleId("StoresFeatureUIKitTests"),
       sources: ["StoresFeatureUIKit/Tests/**"],
       dependencies: [
-        .target(name: "StoresFeatureUIKit")
+        .target(name: "StoresFeatureUIKit"),
+        .target(name: "HotCoffeeHaterTestCore")
       ]
     ),
     
     // App
     // --SwiftUI Version
-    .target(
-      name: "HotCoffeeHater",
-      destinations: .iOS,
-      product: .app,
-      bundleId: bundleId("HotCoffeeHater"),
-      infoPlist: .extendingDefault(
-        with: [
-          "UILaunchScreen": .dictionary([:])
+      .target(
+        name: "HotCoffeeHater",
+        destinations: .iOS,
+        product: .app,
+        bundleId: bundleId("HotCoffeeHater"),
+        infoPlist: .extendingDefault(
+          with: [
+            "UILaunchScreen": .dictionary([:])
+          ]
+        ),
+        sources: ["HotCoffeeHater/Sources/**"],
+        resources: ["HotCoffeeHater/Resources/**"],
+        dependencies: [
+          .target(name: "StoresFeature")
         ]
       ),
-      sources: ["HotCoffeeHater/Sources/**"],
-      resources: ["HotCoffeeHater/Resources/**"],
-      dependencies: [
-        .target(name: "StoresFeature")
-      ]
-    ),
     .target(
       name: "HotCoffeeHaterTests",
       destinations: .iOS,
@@ -142,13 +168,28 @@ let project = Project(
       bundleId: bundleId("HotCoffeeHaterUIKit"),
       infoPlist: .extendingDefault(
         with: [
-          "UILaunchScreen": .dictionary([:])
+          "UILaunchScreen": .dictionary([:]),
+          "UIApplicationSceneManifest": [
+            "UIApplicationSupportsMultipleScenes": false,
+            "UISceneConfigurations": [
+              "UIWindowSceneSessionRoleApplication": [
+                [
+                  "UISceneConfigurationName": "Default Configuration",
+                  "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                ],
+              ]
+            ]
+          ],
+          "NSLocationTemporaryUsageDescriptionDictionary": .dictionary([
+            "LocationAccuracyRequest": "주변 매장을 찾기 위해 위치 정보를 사용합니다."
+          ]),
+          "NSLocationWhenInUseUsageDescription": "주변 매장을 찾기 위해 위치 정보가 필요합니다."
         ]
       ),
       sources: ["HotCoffeeHaterUIKit/Sources/**"],
       resources: ["HotCoffeeHaterUIKit/Resources/**"],
       dependencies: [
-        .target(name: "StoresFeatureUIKit")
+        .target(name: "StoresFeatureUIKit"),
       ]
     ),
   ]
