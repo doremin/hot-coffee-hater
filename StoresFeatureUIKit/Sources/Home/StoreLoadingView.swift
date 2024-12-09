@@ -11,7 +11,7 @@ import HotCoffeeHaterCore
 @MainActor
 final class StoreLoadingView: BaseView {
   
-  private var dots: [UIView] = createDots()
+  private let dots: [UIView] = createDots()
   
   override var viewGraph: [UIView] {
     dots

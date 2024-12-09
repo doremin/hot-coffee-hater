@@ -23,16 +23,11 @@ public class BaseViewController<BaseView: UIView>: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     
-    defineSubviews()
     setupConstraints()
   }
   
   public override func loadView() {
     view = BaseView()
-  }
-  
-  func defineSubviews() {
-    // override point
   }
   
   func setupConstraints() {

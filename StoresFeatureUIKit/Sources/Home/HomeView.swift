@@ -11,15 +11,6 @@ import RxCocoa
 // MARK: - HomeView
 final public class HomeView: BaseView {
   
-//  addSubview(mapView)
-//  addSubview(bottomView)
-//  addSubview(loadingView)
-//  addSubview(myLocationButton)
-//  myLocationButton.addSubview(myLocationImageView)
-//  bottomView.addSubview(dragHandle)
-//  bottomView.addSubview(bottomViewTitleLabel)
-//  bottomView.addSubview(tableView)
-  
   public override var viewGraph: [UIView] {
     [
       mapView,
@@ -140,15 +131,6 @@ final public class HomeView: BaseView {
   
   // MARK: - Setup
   private func setupViews() {
-    addSubview(mapView)
-    addSubview(bottomView)
-    addSubview(loadingView)
-    addSubview(myLocationButton)
-    myLocationButton.addSubview(myLocationImageView)
-    bottomView.addSubview(dragHandle)
-    bottomView.addSubview(bottomViewTitleLabel)
-    bottomView.addSubview(tableView)
-    
     tableView.delegate = self
     tableView.dataSource = self
     mapView.delegate = self
