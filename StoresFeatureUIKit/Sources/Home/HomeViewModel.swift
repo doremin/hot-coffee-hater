@@ -50,48 +50,48 @@ final public class HomeViewModel: ViewModelType {
   // MARK: - Properties
   private let disposeBag = DisposeBag()
   private let storesRepository: StoresRepository
+  private let scheduler: SchedulerType
   
   // MARK: Relays
-  private let storesRelay = BehaviorRelay<[StoreEntity]>(value: [])
+  private let storesRelay = PublishRelay<[StoreEntity]>()
   private let isLoadingRelay = BehaviorRelay<Bool>(value: false)
   private let errorRelay = PublishRelay<APIError>()
   
   
   // MARK: - Initializer
-  public init(storesRepository: StoresRepository) {
+  public init(storesRepository: StoresRepository, scheduler: SchedulerType = MainScheduler.instance) {
     self.storesRepository = storesRepository
+    self.scheduler = scheduler
   }
   
   // MARK: - Transform
   public func transform(input: Input) -> Output {
     input.coordinate
+      .observe(on: scheduler)
       .do(onNext: { [weak self] _ in
         guard let self = self else {
           return
         }
-        
         self.isLoadingRelay.accept(true)
       })
-      .debounce(.microseconds(600), scheduler: MainScheduler.instance)
+      .debounce(.milliseconds(600), scheduler: scheduler)
       .flatMapLatest { [weak self] location -> Observable<[StoreEntity]> in
         guard let self = self else {
           return .empty()
         }
-        
         return self.fetchStores(location: location)
       }
       .do(onNext: { [weak self] _ in
         guard let self = self else {
           return
         }
-        
         self.isLoadingRelay.accept(false)
       })
       .bind(to: storesRelay)
       .disposed(by: disposeBag)
     
     return Output(
-      stores: storesRelay.asDriver(),
+      stores: storesRelay.asDriver(onErrorJustReturn: []),
       isLoading: isLoadingRelay.asDriver(),
       error: errorRelay.asSignal())
   }
@@ -101,7 +101,7 @@ final public class HomeViewModel: ViewModelType {
       guard let self = self else {
         return Disposables.create()
       }
-      
+
       Task {
         do {
           let stores = try await self.storesRepository.getStores(
@@ -113,7 +113,6 @@ final public class HomeViewModel: ViewModelType {
           self.errorRelay.accept(error)
         }
       }
-      
       return Disposables.create()
     }
   }

@@ -63,6 +63,12 @@ public struct StoreEntity: Decodable {
   }
 }
 
+extension StoreEntity: Equatable {
+  public static func == (lhs: StoreEntity, rhs: StoreEntity) -> Bool {
+    lhs.id == rhs.id
+  }
+}
+
 public enum StoreEntityFixture {
   public static func create(
     id: Int = 1,

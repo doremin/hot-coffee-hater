@@ -14,7 +14,6 @@ let project = Project(
       product: .framework,
       bundleId: bundleId("HotCoffeeHaterCore"),
       sources: ["HotCoffeeHaterCore/Sources/**"],
-      resources: ["HotCoffeeHaterCore/Resources/**"],
       dependencies: [
         .external(name: "RxSwift"),
         .external(name: "RxCocoa"),
@@ -168,7 +167,11 @@ let project = Project(
       bundleId: bundleId("HotCoffeeHaterUIKit"),
       infoPlist: .extendingDefault(
         with: [
-          "UILaunchScreen": .dictionary([:]),
+          "UILaunchScreen": [
+            "UIColorName": "LaunchBackground",
+            "UIImageName": "LaunchIcon",
+            "UIImageRespectsSafeAreaInsets": true
+          ],
           "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
             "UISceneConfigurations": [
@@ -183,7 +186,9 @@ let project = Project(
           "NSLocationTemporaryUsageDescriptionDictionary": .dictionary([
             "LocationAccuracyRequest": "주변 매장을 찾기 위해 위치 정보를 사용합니다."
           ]),
-          "NSLocationWhenInUseUsageDescription": "주변 매장을 찾기 위해 위치 정보가 필요합니다."
+          "NSLocationWhenInUseUsageDescription": "주변 매장을 찾기 위해 위치 정보가 필요합니다.",
+          "CFBundleIconName": "AppIcon",
+          "CFBundleName": "얼죽아"
         ]
       ),
       sources: ["HotCoffeeHaterUIKit/Sources/**"],
