@@ -11,14 +11,14 @@ import SnapKit
 
 open class BaseView: UIView {
   
-  open var viewGraph: [UIView] {
-    []
+  open var viewGraph: ViewGraph {
+    ViewGraph(views: [])
   }
   
   public init() {
     super.init(frame: .zero)
     
-    viewGraph.forEach { addSubview($0) }
+    viewGraph.views.forEach { addSubview($0) }
     setupConstraints()
   }
   

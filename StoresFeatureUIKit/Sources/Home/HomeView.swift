@@ -11,21 +11,20 @@ import RxCocoa
 // MARK: - HomeView
 final public class HomeView: BaseView {
   
-  public override var viewGraph: [UIView] {
-    [
-      mapView,
-      bottomView {
-        dragHandle
-        bottomViewTitleLabel
-        tableView
-      },
-      loadingView,
-      myLocationButton {
-        myLocationImageView
-      }
-    ]
+  @ViewGraphBuilder
+  public override var viewGraph: ViewGraph {
+    mapView
+    bottomView {
+      dragHandle
+      bottomViewTitleLabel
+      tableView
+    }
+    loadingView
+    myLocationButton {
+      myLocationImageView
+    }
   }
-  
+
   // MARK: - UI Components
   let mapView: MKMapView = {
     let view = MKMapView()
@@ -123,6 +122,7 @@ final public class HomeView: BaseView {
     super.init()
     setupViews()
     setupGestures()
+    printViewHierarchy()
   }
   
   required init?(coder: NSCoder) {
