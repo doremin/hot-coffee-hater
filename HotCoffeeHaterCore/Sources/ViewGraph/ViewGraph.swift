@@ -34,12 +34,6 @@ public struct ViewGraphBuilder {
 
 extension UIView {
   @discardableResult
-  public func callAsFunction(@ViewGraphBuilder _ builder: () -> [UIView]) -> UIView {
-    builder().forEach { addSubview($0) }
-    return self
-  }
-  
-  @discardableResult
   public func callAsFunction(@ViewGraphBuilder _ builder: () -> ViewGraph) -> UIView {
     builder().views.forEach { addSubview($0) }
     return self

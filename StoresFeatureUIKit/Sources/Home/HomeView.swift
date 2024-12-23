@@ -122,7 +122,6 @@ final public class HomeView: BaseView {
     super.init()
     setupViews()
     setupGestures()
-    printViewHierarchy()
   }
   
   required init?(coder: NSCoder) {
