@@ -13,8 +13,8 @@ final class StoreLoadingView: BaseView {
   
   private let dots: [UIView] = createDots()
   
-  @ViewGraphBuilder
-  override var viewGraph: ViewGraph {
+  @ViewHierarchyBuilder
+  override var viewHierarchy: ViewHierarchy {
     dots
   }
   

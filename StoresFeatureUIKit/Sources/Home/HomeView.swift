@@ -11,8 +11,8 @@ import RxCocoa
 // MARK: - HomeView
 final public class HomeView: BaseView {
   
-  @ViewGraphBuilder
-  public override var viewGraph: ViewGraph {
+  @ViewHierarchyBuilder
+  public override var viewHierarchy: ViewHierarchy {
     mapView
     bottomView {
       dragHandle
