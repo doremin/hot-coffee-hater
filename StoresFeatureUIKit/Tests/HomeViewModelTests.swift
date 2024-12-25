@@ -72,4 +72,34 @@ final class HomeViewModelTests: XCTestCase {
     await fulfillment(of: [expectation], timeout: 2.0)
     XCTAssertEqual(receivedStores, expectedResults)
   }
+  
+  // debounce가 600ms 이므로 fulfillment는 항상 실패해야함
+  // expectation.isInverted = true로 설정해서 fulfill 되지 않아야 성공
+  @MainActor
+  func test_debounce_works() async {
+    // Given
+    let coordinate = PublishSubject<CLLocationCoordinate2D>()
+    let expectation = expectation(description: "Stores fetched")
+    expectation.isInverted = true
+    mockRepository.stubbedResult = .success(makeExpectedStores())
+    
+    var receivedStores: [StoreEntity]?
+    
+    // When
+    let input = HomeViewModel.Input(coordinate: coordinate)
+    let output = sut.transform(input: input)
+    
+    output.stores
+      .drive(onNext: { stores in
+        receivedStores = stores
+        expectation.fulfill()
+      })
+      .disposed(by: disposeBag)
+    
+    coordinate.onNext(makeCoordinate())
+    
+    // Then
+    await fulfillment(of: [expectation], timeout: 0.5)
+    XCTAssertNil(receivedStores)
+  }
 }
